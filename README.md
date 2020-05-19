@@ -22,7 +22,7 @@ Tout le système est embarqué sur une carte Raspberry PI 4B+, Raspbian BUSTER.
 ![Vue globale](https://user-images.githubusercontent.com/6602774/82240232-59162d80-993a-11ea-8f8e-c7d3cfde2a7c.png)
 
 
-Détail des choix techniques pour la partie Unité de Contrôle :
+Détail des choix techniques pour la partie Interface Graphique :
 
 * [Angular] - Exposer et envoyer rapidement une application web qui intègre toutes les composantes de sécurité
 * [SocketIO] - Elément facile intégré avec Angular, Node et Python (temps-réel)
