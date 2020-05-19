@@ -43,7 +43,7 @@ export class OperatorService extends GenericHttpService<Operator>{
   }
 
   public getLeader(drone: string){
-    return this.operators.find(op => drone = op.controlled_drone)?.name;
+    return this.operators.find(op => drone === op.controlled_drone)?.name;
   }
 
   public authenticate(username: string){
