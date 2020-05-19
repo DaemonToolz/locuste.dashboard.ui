@@ -42,3 +42,4 @@ Evolutions à venir :
 * Mise à jour tutoriel et icônes
 * Amélioration du profil opérateur
 * Amélioration des performances
+* Intégration de tests
