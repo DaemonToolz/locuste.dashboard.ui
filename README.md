@@ -43,3 +43,15 @@ Evolutions à venir :
 * Amélioration du profil opérateur
 * Amélioration des performances
 * Intégration de tests
+
+Captures d'écran :
+
+
+![welcome](https://user-images.githubusercontent.com/6602774/82319729-667ef680-99d2-11ea-9565-fa509c285cb5.PNG)
+![welcome-preview-details](https://user-images.githubusercontent.com/6602774/82319732-67178d00-99d2-11ea-95cb-5a702b9e8bde.PNG)
+![welcome-preview-map](https://user-images.githubusercontent.com/6602774/82319733-67b02380-99d2-11ea-87dd-6e9a2c30e481.PNG)
+![welcome-monitor-path](https://user-images.githubusercontent.com/6602774/82319731-67178d00-99d2-11ea-8b00-16ec6fb378e4.PNG)
+![city-map](https://user-images.githubusercontent.com/6602774/82319734-67b02380-99d2-11ea-9fad-856dc950efdf.PNG)
+![drone-ctrl](https://user-images.githubusercontent.com/6602774/82319737-6848ba00-99d2-11ea-83a8-5776d83fe5fd.PNG)
+![tutorial](https://user-images.githubusercontent.com/6602774/82319727-65e66000-99d2-11ea-8f60-fd75fd65c773.PNG)
+![identify](https://user-images.githubusercontent.com/6602774/82319738-6848ba00-99d2-11ea-8e1a-cef905973fec.PNG)
