@@ -1,0 +1,22 @@
+
+
+<div  style="width:100%" [style.height.px]="height" >
+    <div>
+        <div><h2><strong>Dernières coordonées coonues</strong></h2> </div>
+        <div>Latitude : <span [innerHTML]='000'></span> </div>
+        <div>Longitude : <span [innerHTML]='000'></span></div>
+    </div>
+
+
+    <div *ngIf="details != null">
+        <h2><strong>Détails disponibles</strong></h2> 
+        <div  *ngFor="let key of getKeys(details)"> 
+            <strong [innerHTML]="key"></strong> : 
+            <span [innerHTML]="details.get(key)"> </span>
+        </div>
+    </div>
+
+    <div *ngIf="details == null" >
+        <h2><strong>Aucun détail disponible</strong></h2> 
+    </div>
+</div>

@@ -1,0 +1,139 @@
+<mat-grid-list rowHeight="1:3.5" cols="8">
+
+    <mat-grid-tile colspan="2">
+        <mat-card class="full-scale">
+            <mat-card-header>
+                <mat-card-title class="centerized">
+                    <h1> <strong>Section Opérateurs</strong> </h1>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="operator-content">
+                <div class="relay-div" *ngFor="let operator of operatorService.operators">
+                    <p>
+                        <span> Nom : </span>
+                        <strong [innerHTML]="operator.name"></strong>
+                        <span *ngIf="(operatorService.myself != null && operatorService.myself.channel_id === operator.channel_id)"> (Vous) </span>
+                    </p>
+                    <p> 
+                        <span> Identifiant unique : </span>
+                        <span [innerHTML]="operator.channel_id"></span> 
+                    </p>
+                    <p> 
+                        <span> Drone contrôlé : </span>
+                        <span [innerHTML]="operator.controlled_drone"> </span>
+                    </p>
+
+                    <p> 
+                        <span>Anonyme : </span>
+                        <span [innerHTML]="operator.is_anonymous ? 'Oui':'Non'"> </span>
+                    </p>
+                    <br/>
+                </div>
+                
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+
+    <mat-grid-tile colspan="1">
+
+        <mat-card [ngClass]="SocketStatus[socketConnection]">
+            <mat-card-header>
+                <mat-card-title>
+                    <h3> <strong> Connexion relai </strong> </h3>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="centerized" *ngIf="socketConnection == SocketStatus.connecting">
+                <mat-progress-spinner class="centered-spinner" mode="indeterminate">
+                </mat-progress-spinner>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="2">
+        <mat-card class="full-scale">
+            <mat-card-header [ngClass]="{'connected': (health.isRelayReachable == true), 'disconnected': (health.isRelayReachable == false)}">
+                <mat-card-title>
+                    <h1> <strong>Relai et unité de contrôle </strong> </h1>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content  class="operator-content">
+                <p><strong>Derniers statuts du programme de contrôle</strong> </p>
+                <div *ngFor="let system of getKeys(health.healthMonitor)">
+                    
+                    <strong [innerHTML]="System[system]"></strong>
+                    <a mat-button (click)="brainModuleRestart(system, subsystem)" [ngClass]="{'disconnected-text': (health.healthMonitor.get(system).get(subsystem) == false)}" class="icon-text relay-button" [disabled]="health.healthMonitor.get(system).get(subsystem) ? 'disabled': null"*ngFor="let subsystem of getKeys(health.healthMonitor.get(system))">
+                        <mat-icon>
+                            {{health.healthMonitor.get(system).get(subsystem) ? 'check_circle' : 'remove_circle'}}
+                        </mat-icon>
+                        <span [innerHTML]="SubSystem[subsystem]"></span>
+                    </a>
+
+                    
+                </div>
+
+                <span class="relay-div" *ngFor="let drone of dronedata.droneStatuses">
+                    <div *ngFor="let system of getKeys(moduleStatus(drone.name))">
+                        <strong [innerHTML]="System[system] + ' dédié à ' + drone.name"></strong>
+                        <a mat-button [ngClass]="{'disconnected-text': (moduleStatus(drone.name).get(system).get(subsystem) == false)}" (click)="externalModuleRestart(drone.name, System[system], SubSystem[subsystem])" class="icon-text relay-button" *ngFor="let subsystem of getKeys(moduleStatus(drone.name).get(system))" [disabled]="moduleStatus(drone.name).get(system).get(subsystem) ? 'disabled': null"> 
+                            <mat-icon>
+                                {{moduleStatus(drone.name).get(system).get(subsystem) ? 'check_circle' : 'remove_circle'}}
+                            </mat-icon>
+                            <span [innerHTML]="SubSystem[subsystem]"></span>
+
+                            <span *ngIf="!moduleStatus(drone.name).get(system).get(subsystem)" >
+                                - Cliquer pour redémarrer le module
+                            </span>
+                        </a>
+                    </div>
+                </span>
+      
+
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="1">
+
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title class="centerized">
+                    <h3> <strong> Connexion automates </strong> </h3>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="relay-div" *ngFor="let drone of dronedata.droneStatuses"
+                    [matTooltip]="drone.message"
+                    [matTooltipClass]="DroneConnectionStatus[drone.droneStatus]"
+                    aria-label=""
+                    [ngClass]="DroneConnectionStatus[drone.droneStatus]">
+                    <span><strong [innerHTML]="drone.name"></strong></span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="2">
+        <mat-card class="full-scale">
+            <mat-card-header>
+                <mat-card-title class="centerized">
+                    <h1> <strong>Automates et Drones</strong> </h1>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="operator-content">
+                <div class="relay-div" 
+                    *ngFor="let drone of automatonMonitoring.availableAutomatons">
+                    <strong [ngClass]="{'error': (automatonStatus(drone).available == false)}" [innerHTML]="drone"></strong>
+                    <div class="icon-text" *ngFor="let key of availableFields(automatonStatus(drone))" [ngClass]="displayStatus(StatusToReadable[key], automatonStatus(drone)[key])">
+                        <mat-icon>
+                            {{automatonStatus(drone)[key] ? 'check_circle' : 'remove_circle'}}
+                        </mat-icon>
+                        <span [innerHTML]="StatusToReadable[key]"></span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+
+</mat-grid-list>

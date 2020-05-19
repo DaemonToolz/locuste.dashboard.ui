@@ -1,0 +1,77 @@
+<mat-grid-list cols="2" rowHeight="3:1.57">
+    <mat-grid-tile *ngFor="let drone of availableDrones">
+        
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    <a mat-button routerLink="{{'/console/'+drone}}"> 
+                        <mat-icon>open_in_browser</mat-icon>
+                        <span [innerHTML]="drone"></span>
+                    </a>
+
+                    <a mat-button *ngIf="!isOnView(drone, ViewsEnum.DroneCameraView)" (click)="changeView(drone, ViewsEnum.DroneCameraView)">  
+                        <mat-icon svgIcon="drone_icon"></mat-icon>
+                        Vue du drone
+                    </a>
+
+                    <a mat-button *ngIf="!isOnView(drone, ViewsEnum.DroneMapView)" (click)="changeView(drone, ViewsEnum.DroneMapView)">  
+                        <mat-icon>location_on</mat-icon>
+                        Carte
+                    </a>
+
+                    <a mat-button *ngIf="!isOnView(drone, ViewsEnum.DroneDetailsView)" (click)="changeView(drone, ViewsEnum.DroneDetailsView)">  
+                        <mat-icon>loupe</mat-icon>
+                        Détails
+                    </a>
+
+                    <a mat-button *ngIf="getAutopilotStatus(drone) != null" (click)="changeAutopilotStatus(drone)" >  
+                        <mat-icon>airplanemode_active</mat-icon>
+                        Pilote automatique
+                    </a>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="centerized">
+                <app-rtsp-streamer *ngIf="isOnView(drone,ViewsEnum.DroneCameraView )" [width]="width" [height]="height"  [drone]="drone"></app-rtsp-streamer>
+                <app-drone-map *ngIf="isOnView(drone, ViewsEnum.DroneMapView)" [height]="height"  [drone]="drone"></app-drone-map>
+                <app-drone-status-detail *ngIf="isOnView(drone, ViewsEnum.DroneDetailsView)"  [height]="height" [drone]="drone"></app-drone-status-detail>
+            </mat-card-content>
+            <mat-card-actions>
+
+                <a mat-button [ngClass]="{'high':!isManual(drone), 'medium':isManual(drone)}"> 
+                    <mat-icon> {{isManual(drone)?'person':'android'}} </mat-icon>
+                    <span *ngIf="getDroneLeader(drone) != null" [innerHTML]="getDroneLeader(drone)"></span>
+                </a>
+
+                <a mat-button [ngClass]="GPSStrength[getGPSStrength(drone)]"> 
+                    <mat-icon> {{getGPSStatus(drone) === GPSStatus.ready?'gps_fixed':getGPSStatus(drone) === GPSStatus.unavailable?'gps_not_fixed':'gps_off'}} </mat-icon>
+                </a>
+
+
+                <a mat-button [ngClass]="WifiStrength[getWifiStrength(drone)]"> 
+                    <mat-icon> {{getWifiStatus(drone) === WifiStatus.ready?'signal_wifi_4_bar':'signal_wifi_off'}} </mat-icon>
+                </a>
+
+                <a mat-button [ngClass]="BatteryStatus[getBatteryStatus(drone)]"> 
+                    <mat-icon> battery_charging_full </mat-icon>
+                    <span [innerHTML]="droneBattery(drone)+'%'"></span>
+                </a>
+                
+
+                <a mat-button matBadge="&#8288;" *ngIf="getAutopilotStatus(drone) != null"  matBadgeColor="{{getAutopilotStatus(drone).is_busy ? 'warn' : 'primary'}}"   [ngClass]="{'low':isAutopilotOffline(drone), 'medium':isAutopilotInactive(drone),'high':isAutopilotOperational(drone)}">  
+                    <mat-icon *ngIf="getAutopilotStatus(drone).is_running">airplanemode_active</mat-icon>
+                    <mat-icon *ngIf="!getAutopilotStatus(drone).is_running">airplanemode_inactive</mat-icon>
+                    
+                </a>
+
+    
+                <a mat-button [ngClass]="{'high':!isTested(drone), 'medium':isTested(drone)}"> 
+                    <mat-icon> {{isTested(drone)?'lock':'lock_open'}} </mat-icon>
+                </a>
+              
+         
+
+            </mat-card-actions>
+        </mat-card> 
+    </mat-grid-tile>
+
+</mat-grid-list>

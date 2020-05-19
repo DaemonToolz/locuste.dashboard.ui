@@ -1,0 +1,64 @@
+.centerized {
+    text-align: center;
+    align-content: center;
+}
+
+.full-scale{
+    height:100%;
+    width:100%;
+}
+
+.connecting {
+    background-color: blue;
+}
+
+.connected {
+    background-color: green;
+}
+
+.disconnected {
+    background-color: darken(red,5);
+}
+
+.disconnected-text {
+    color: lighten(red,10);
+}
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {   
+    stroke:white;
+}
+
+.centered-spinner{
+    margin:0 auto; 
+}
+
+.relay-div {
+    margin:5px;
+}
+
+.relay-button{
+    line-height: 30px;
+}
+
+
+.icon-text {
+    display: flex;
+    align-items: center;
+}
+
+.mat-icon{
+    margin-right: 5px;
+}
+
+.error {
+    color: lighten(red,10);
+}
+
+.warning {
+    color: lighten(orange,10);
+}
+
+.operator-content {
+    height: 92%;;
+    overflow: auto;
+}

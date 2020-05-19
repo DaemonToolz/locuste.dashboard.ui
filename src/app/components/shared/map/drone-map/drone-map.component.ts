@@ -1,0 +1,214 @@
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { latLng, tileLayer, LatLngBounds, Map, marker, Layer, icon , Marker, LatLng} from 'leaflet';
+import { WebsocketService } from 'src/app/services/websocket.service';
+import { Subscription } from 'rxjs';
+import { DroneCoordinates, SimplifiedDroneFlightCoordinates, DroneFlightCoordinates } from 'src/app/models/coordinates';
+import { MapServiceService } from 'src/app/services/maps/map-service.service';
+import { Boundaries } from 'src/app/models/map';
+import { take } from 'rxjs/operators';
+import { AutopilotDataService } from 'src/app/services/autopilot/autopilot-data.service';
+
+@Component({
+  selector: 'app-drone-map',
+  templateUrl: './drone-map.component.html',
+  styleUrls: ['./drone-map.component.scss']
+})
+export class DroneMapComponent implements OnInit, OnDestroy {
+  @Input() public width: number
+  @Input() public height: number
+  @Input() public drone: string
+ 
+  public options: any;
+  private myMap: Map;
+  private dronePosMarker: Marker<any>;
+  
+  private onUpdate: Subscription;
+  private _lastCoordinates : DroneCoordinates;
+  
+  private NextOrder : Marker<any>
+  private CurrentOrder : Marker<any>
+  private PreviousOrder : Marker<any>
+  private onAutopilot: Subscription;
+  private onTarget: Subscription;
+
+  private _autoPilotTarget: Marker<any>
+
+  private myBoundaries: Boundaries
+  constructor(private updater:WebsocketService, private autoPilotService: AutopilotDataService, private mapService: MapServiceService ) { 
+    this.onUpdate = this.updater.positionUpdate$.subscribe((position: DroneCoordinates) => {
+      if(position != null && this.myMap != null && position.id === this.drone){
+        this._lastCoordinates = position;
+
+        this.dronePosMarker.setLatLng(latLng(this._lastCoordinates.latitude,  this._lastCoordinates.longitude))
+        this.myMap.setZoomAround(this.dronePosMarker.getLatLng(), 19)
+      }
+    });
+
+    this.mapService.getMapBoundaries().pipe(take(1)).subscribe(result => {
+      this.myBoundaries = result;
+      if(this.myMap != null && result != null){
+        this.defineBoundaries()
+      }
+    })
+
+    this.onAutopilot = this.autoPilotService.autopilotUpdate$.subscribe(update => {
+      if(update != null){
+        if (update.drone_name === this.drone){
+          if(this.CurrentOrder == null ){
+            this.addMark("CurrentOrder", update.coordinates, "Destination actuelle")
+          } else {
+            this.setMark("CurrentOrder", update.coordinates)
+          }
+
+          if(this.PreviousOrder == null ){
+            this.addMark("PreviousOrder", update.metadata.previous, "Destination précédente",0.5)
+          } else {
+            this.setMark("PreviousOrder", update.metadata.previous)
+          }
+
+          if(this.NextOrder == null ){
+            this.addMark("NextOrder", update.metadata.next, "Prochaine destination" ,0.5)
+          } else {
+            this.setMark("NextOrder", update.metadata.next)
+          }
+        }
+      }
+    })
+
+
+    this.onTarget = this.autoPilotService.targetUpdate$.subscribe(update => {
+      if(update != null){
+        if (update.name === this.drone){
+          if(this._autoPilotTarget == null ){
+            this.addMarkFromLatLng("_autoPilotTarget", latLng(update.latitude, update.longitude), "Emplacement du déplacement voulu")
+          } else {
+            this.setMarkFromLatLng("_autoPilotTarget", latLng(update.latitude, update.longitude))
+          }
+        } else {
+            let marker = new Marker(latLng(update.latitude, update.longitude), {
+            icon: icon({
+              iconSize: [20, 36],
+              iconAnchor: [10, 36],
+              iconUrl: 'assets/images/marker-icon.png',
+              iconRetinaUrl: 'assets/images/marker-icon-2x.png',
+              shadowUrl: 'assets/images/marker-shadow.png'
+            })
+          });
+      
+
+          if(this.myMap != null) {
+            marker.addTo(this.myMap)
+          }
+      
+        }
+      }
+    })
+    
+    this.options = {
+      layers: [
+        tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { minZoom: 14,  })
+      ],
+      zoom: 14
+    }; 
+  }
+
+  ngOnDestroy(): void {
+    this.onUpdate.unsubscribe();
+    this.onAutopilot.unsubscribe();
+  }
+
+
+  onMapReady(map: Map) {
+    this.myMap = map;
+   
+    if(this.myBoundaries != null){
+      this.defineBoundaries()
+    }
+
+    this._lastCoordinates = new DroneCoordinates();
+    this._lastCoordinates.latitude = 500;
+    this._lastCoordinates.longitude = 500;
+    this.dronePosMarker = new Marker(latLng(this._lastCoordinates.latitude ,this._lastCoordinates.longitude ), {
+      icon: icon({
+        iconSize: [ 25, 41 ],
+        iconAnchor: [ 13, 41 ],      
+        iconUrl: 'assets/images/marker-icon.png',
+        iconRetinaUrl: 'assets/images/marker-icon-2x.png',
+        shadowUrl: 'assets/images/marker-shadow.png'
+      })
+    });
+    this.dronePosMarker.addTo(this.myMap)
+
+    
+    if(this.CurrentOrder != null) {
+      this.CurrentOrder.addTo(this.myMap)
+    }
+
+    if(this.PreviousOrder != null) {
+      this.PreviousOrder.addTo(this.myMap)
+    }
+
+    if(this.NextOrder != null) {
+      this.NextOrder.addTo(this.myMap)
+    }
+    
+    const self = this
+    this.myMap.on('click',function(event: any){
+        let lat = event.latlng.lat;
+        let lon = event.latlng.lng;
+        let coordinates = new SimplifiedDroneFlightCoordinates();
+        
+        coordinates.latitude = lat;
+        coordinates.longitude = lon;
+        coordinates.name = self.drone
+
+        self.autoPilotService.SendTarget(coordinates);
+    });
+  }
+
+  private defineBoundaries(){
+    let bound = new LatLngBounds(latLng(this.myBoundaries.min_lat, this.myBoundaries.min_lon), latLng(this.myBoundaries.max_lat, this.myBoundaries.max_lon));
+    this.myMap.setMaxBounds(bound)
+    this.myMap.fitBounds(bound)
+  }
+  
+  ngOnInit(): void {
+    
+  }
+
+  private addMark(markName: string, coordinates: DroneCoordinates, description: string, opacity: number = 1){
+    this.addMarkFromLatLng(markName, latLng(coordinates.latitude, coordinates.longitude), description, opacity)
+  }
+
+  private addMarkFromLatLng(markName: string, coordinates: LatLng, description: string, opacity: number = 1){
+    this[markName] = new Marker(coordinates, {
+      opacity:opacity,
+      icon: icon({
+        iconSize: [20, 36],
+        iconAnchor: [10, 36],
+        iconUrl: 'assets/images/marker-icon.png',
+        iconRetinaUrl: 'assets/images/marker-icon-2x.png',
+        shadowUrl: 'assets/images/marker-shadow.png'
+      })
+    });
+
+    (this[markName] as Marker<any>).bindTooltip(description)
+
+    if(this.myMap != null) {
+      (<Marker<any>>this[markName]).addTo(this.myMap)
+    }
+
+  }
+
+  private setMark(markName: string, coordinates :DroneCoordinates){
+    this.setMarkFromLatLng(markName,latLng(coordinates.latitude, coordinates.longitude))
+  }
+
+
+  private setMarkFromLatLng(markName: string, coordinates: LatLng){
+    if(this[markName] != null){
+     (<Marker<any>>this[markName]).setLatLng(coordinates)
+    }
+  }
+
+}

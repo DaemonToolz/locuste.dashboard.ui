@@ -1,0 +1,33 @@
+<mat-card>
+
+    <mat-card-content class="centerized">
+        <app-rtsp-streamer [width]="width" [height]="height" [drone]="selectedDrone"></app-rtsp-streamer>
+    </mat-card-content>
+    <mat-card-actions>
+        <a mat-button (click)="changeFlightModel()" [ngClass]="{'high':!isManual, 'medium':isManual}">
+            <mat-icon> {{isManual?'person':'android'}} </mat-icon>
+            <span *ngIf="isManual"> Demander la reprise automatique</span>
+            <span *ngIf="!isManual"> Demander le vol manuel</span>
+        </a>
+
+        <a mat-button [ngClass]="BatteryStatus[getBatteryStatus]">
+            <mat-icon> battery_charging_full </mat-icon>
+            <span [innerHTML]="droneBattery +'%'"></span>
+        </a>
+
+
+        <a mat-button (click)="showTutorial()" class="high">
+            <mat-icon> help </mat-icon>
+            <span> Tutorial </span>
+        </a>
+
+
+        <a mat-button (click)="changeTestingMode()" [ngClass]="{'high':!isTested, 'medium':isTested}">
+            <mat-icon> {{isTested?'lock':'lock_open'}} </mat-icon>
+            <span *ngIf="!isTested" > Demander le mode test </span>
+            <span *ngIf="isTested" > Demander le mode normal </span>
+        </a>
+
+
+    </mat-card-actions>
+</mat-card>

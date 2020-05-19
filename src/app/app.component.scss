@@ -1,0 +1,43 @@
+
+  .main-icon{
+    font-size: 36px;
+    font-weight: bolder;
+}
+
+mat-icon{
+  height:24px;
+  width:24px;
+}
+
+.main-container {
+  height: calc(100vh - 65px);
+  width: 100vw;
+}
+
+mat-toolbar{
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+  width: 100vw; 
+  display:flex;
+  justify-content: space-evenly;
+}
+
+.error {
+  background-color: red;
+}
+
+.success {
+  background-color: green;
+}
+
+.warning{
+  background-color: orange;
+}
+
+.info {
+  background-color: blue;
+}
+
+

@@ -1,0 +1,37 @@
+
+<mat-toolbar color="primary">
+  <a mat-button class="main-icon" routerLink="/">
+      <span>Locuste</span>
+  </a>
+
+ 
+  <a mat-button routerLink="/" >
+    <mat-icon svgIcon="drone_icon"></mat-icon>
+    Vue générale
+  </a>
+
+
+  <a mat-button routerLink="/monitor" [ngClass]="{'error':!isRelayReachable, 'success':isRelayReachable}">
+    <mat-icon>device_hub</mat-icon> 
+    Unité de contrôle
+  </a>
+
+  <a mat-button routerLink="/monitor" [ngClass]="NotificationType[myStatus.type]">
+    <span [innerHTML]="myStatus.message"></span> 
+  </a>
+ 
+  
+  <a mat-button routerLink="/map" [ngClass]="{'error': !isMapModuleOperational, 'success': isMapModuleOperational}">
+    <mat-icon>location_on</mat-icon>
+    Carte du secteur
+  </a>
+
+  <a mat-button (click)="authenticate()">
+    <mat-icon>person</mat-icon>
+    <span [innerHTML]="myself != null ? (myself.is_anonymous ? myself.channel_id : myself.name) : 'Aucun ID'"></span>
+  </a>
+</mat-toolbar>
+
+<div class="main-container">
+  <router-outlet></router-outlet>
+</div>
