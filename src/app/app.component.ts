@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IdentificationPortalComponent } from './components/shared/identification-portal/identification-portal.component';
 import { PingService } from './services/ping/ping.service';
 import { System, SubSystem } from './models/health';
+import { HelpMeComponent } from './components/shared/help-me/help-me.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -67,6 +68,14 @@ export class AppComponent implements OnDestroy {
         }
       });
     }
+  }
+
+  public showHelp(){
+    this.dialog.open(HelpMeComponent, {
+      width: '75%',
+      height: '75%'
+    });
+
   }
 
 }

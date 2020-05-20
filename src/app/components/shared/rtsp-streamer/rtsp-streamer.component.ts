@@ -3,6 +3,7 @@ import JSMpeg from '@cycjimmy/jsmpeg-player';
 import {SocketFunction} from '../../../models/sockets'
 import * as io from 'socket.io-client';
 import { DroneDataService } from 'src/app/services/drone/drone-data.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-rtsp-streamer',
@@ -36,7 +37,7 @@ export class RtspStreamerComponent implements OnInit, OnChanges, AfterViewInit {
   ngAfterViewInit() {
     let my_ip = this.drone.split("_")[1];
     let target_port = my_ip.split(".")[2]; 
-    this.player = new JSMpeg.Player(`ws://192.168.1.66:70${target_port}`, {
+    this.player = new JSMpeg.Player(environment.services.video_server+`70${target_port}`, { // 192.168.1.66
       canvas: this.streamingcanvas.nativeElement // Canvas should be a canvas DOM element
     })	
 

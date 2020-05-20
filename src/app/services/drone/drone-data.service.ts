@@ -53,7 +53,8 @@ export class DroneDataService {
 
 
   public gpsStrength(name:string): GPSStrength{
-    if(this.droneGPS(name) > 5) return GPSStrength.high
+    if(this.droneGPS(name) > 18) return GPSStrength.high
+    if(this.droneGPS(name) > 10) return GPSStrength.medium
     return GPSStrength.low
   }
 

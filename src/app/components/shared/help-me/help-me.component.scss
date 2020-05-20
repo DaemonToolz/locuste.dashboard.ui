@@ -1,0 +1,29 @@
+
+  .error-fill {
+    background-color: red;
+  }
+  
+  .success-fill {
+    background-color: green;
+  }
+  
+  .warning-fill {
+    background-color: orange;
+  }
+  
+  .info-fill {
+    background-color: blue;
+  }
+
+  .error-text {
+    color: lighten(red,10);
+}
+
+.warning-text {
+    color: lighten(orange,10);
+}
+  
+
+  ::ng-deep .mat-dialog-container {
+    overflow-y: hidden !important;
+  }

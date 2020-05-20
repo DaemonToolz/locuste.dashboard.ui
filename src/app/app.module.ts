@@ -17,6 +17,9 @@ import {MatTooltipModule} from "@angular/material/tooltip"
 import {MatFormFieldModule} from "@angular/material/form-field"
 import {MatInputModule} from "@angular/material/input"
 import {MatBadgeModule} from "@angular/material/badge"
+import {MatTabsModule} from "@angular/material/tabs"
+import {MatTableModule} from "@angular/material/table"
+
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule} from '@angular/material/dialog'
 import { HttpClientModule } from '@angular/common/http';
@@ -35,6 +38,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { DroneMapComponent } from './components/shared/map/drone-map/drone-map.component';
 import { CityMapComponent } from './components/map/city-map/city-map.component';
 import { DroneStatusDetailComponent } from './components/shared/drone-status-detail/drone-status-detail.component';
+import { HelpMeComponent } from './components/shared/help-me/help-me.component';
+import { DroneConsoleSettingsComponent } from './components/shared/drone-console-settings/drone-console-settings.component';
 
 @NgModule({
   declarations: [
@@ -47,11 +52,15 @@ import { DroneStatusDetailComponent } from './components/shared/drone-status-det
     IdentificationPortalComponent,
     DroneMapComponent,
     CityMapComponent,
-    DroneStatusDetailComponent
+    DroneStatusDetailComponent,
+    HelpMeComponent,
+    DroneConsoleSettingsComponent
   ],
   entryComponents:[
     ControlTutorialDialogComponent,
-    IdentificationPortalComponent
+    IdentificationPortalComponent,
+    DroneStatusDetailComponent,
+    DroneConsoleSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -62,6 +71,8 @@ import { DroneStatusDetailComponent } from './components/shared/drone-status-det
     HttpClientModule,
     MatIconModule,
     MatTooltipModule,
+    MatTableModule,
+    MatTabsModule,
     MatBadgeModule,
     FormsModule,
     MatFormFieldModule,

@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Menu d'aide</h2>
+<mat-dialog-content>
+    <mat-tab-group #helpGroup (selectedTabChange)="tabChanged($event)">
+        <mat-tab label="Actions globales"></mat-tab>
+        <mat-tab label="Statuts globaux"></mat-tab>
+        <mat-tab label="Actions sur le mode mosaïque"></mat-tab>
+        <mat-tab label="Statuts sur le mode mosaïque"></mat-tab>
+        <mat-tab label="Actions sur le mode console"></mat-tab>
+        <mat-tab label="Statuts sur le mode console"></mat-tab>
+        <mat-tab label="Modules"></mat-tab>
+    </mat-tab-group>
+
+    <mat-table [dataSource]="helpPage">
+        <ng-container matColumnDef="content">
+            <mat-header-cell *matHeaderCellDef> Représentation </mat-header-cell>
+            <mat-cell *matCellDef="let element"> 
+                <a mat-button [ngClass]="element.class">
+                    <mat-icon *ngIf="element.icon && !element.is_custom"> {{element.icon}}</mat-icon>
+                    <mat-icon *ngIf="element.icon && element.is_custom" svgIcon="{{element.icon}}"> </mat-icon>
+                    <span [innerHTML]="element.content"></span>
+                </a>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <span [innerHTML]="element.description"></span>
+            </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="comment">
+            <mat-header-cell *matHeaderCellDef> Commentaire </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                <span [innerHTML]="element.comment"></span>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</mat-dialog-content>

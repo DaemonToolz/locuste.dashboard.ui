@@ -26,6 +26,12 @@
     Carte du secteur
   </a>
 
+
+  <a mat-button (click)="showHelp()">
+    <mat-icon>help</mat-icon>
+    <span> Menu d'aide </span>
+  </a>
+
   <a mat-button (click)="authenticate()">
     <mat-icon>person</mat-icon>
     <span [innerHTML]="myself != null ? (myself.is_anonymous ? myself.channel_id : myself.name) : 'Aucun ID'"></span>

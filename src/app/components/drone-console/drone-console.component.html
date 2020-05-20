@@ -6,28 +6,48 @@
     <mat-card-actions>
         <a mat-button (click)="changeFlightModel()" [ngClass]="{'high':!isManual, 'medium':isManual}">
             <mat-icon> {{isManual?'person':'android'}} </mat-icon>
-            <span *ngIf="isManual"> Demander la reprise automatique</span>
-            <span *ngIf="!isManual"> Demander le vol manuel</span>
+            <span *ngIf="isManual"> Passer en vol automatique </span>
+            <span *ngIf="!isManual"> Passer en vol manuel </span>
         </a>
+
+
+        <a mat-button [ngClass]="GPSStrength[getGPSStrength]"> 
+            <mat-icon> {{getGPSStatus === GPSStatus.ready?'gps_fixed':getGPSStatus === GPSStatus.unavailable?'gps_not_fixed':'gps_off'}} </mat-icon>
+        </a>
+
+
+        <a mat-button [ngClass]="WifiStrength[getWifiStrength]"> 
+            <mat-icon> {{getWifiStatus === WifiStatus.ready?'signal_wifi_4_bar':'signal_wifi_off'}} </mat-icon>
+        </a>
+
 
         <a mat-button [ngClass]="BatteryStatus[getBatteryStatus]">
             <mat-icon> battery_charging_full </mat-icon>
             <span [innerHTML]="droneBattery +'%'"></span>
         </a>
 
-
-        <a mat-button (click)="showTutorial()" class="high">
-            <mat-icon> help </mat-icon>
-            <span> Tutorial </span>
+        <a mat-button matBadge="&#8288;" *ngIf="getAutopilotStatus != null"  matBadgeColor="{{getAutopilotStatus.is_busy ? 'warn' : 'primary'}}"   [ngClass]="{'low':isAutopilotOffline, 'medium':isAutopilotInactive,'high':isAutopilotOperational}">  
+            <mat-icon *ngIf="getAutopilotStatus.is_running">airplanemode_active</mat-icon>
+            <mat-icon *ngIf="!getAutopilotStatus.is_running">airplanemode_inactive</mat-icon>
+            
         </a>
-
 
         <a mat-button (click)="changeTestingMode()" [ngClass]="{'high':!isTested, 'medium':isTested}">
             <mat-icon> {{isTested?'lock':'lock_open'}} </mat-icon>
-            <span *ngIf="!isTested" > Demander le mode test </span>
-            <span *ngIf="isTested" > Demander le mode normal </span>
+            <span *ngIf="!isTested" > Passer en mode test </span>
+            <span *ngIf="isTested" > Passer en Mode normal </span>
         </a>
 
 
+        <a mat-button (click)="showTutorial()">
+            <mat-icon> help </mat-icon>
+            <span> Tutoriel </span>
+        </a>
+
+
+        <a mat-button (click)="showSettings()">
+            <mat-icon> settings_application </mat-icon>
+            <span> Paramètres </span>
+        </a>
     </mat-card-actions>
 </mat-card>
