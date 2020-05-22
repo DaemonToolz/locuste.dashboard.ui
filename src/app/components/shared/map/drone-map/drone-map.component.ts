@@ -24,7 +24,8 @@ export class DroneMapComponent implements OnInit, OnDestroy {
   
   private onUpdate: Subscription;
   private _lastCoordinates : DroneCoordinates;
-  
+  private _targetCoordinates: SimplifiedDroneFlightCoordinates
+
   private NextOrder : Marker<any>
   private CurrentOrder : Marker<any>
   private PreviousOrder : Marker<any>
@@ -55,21 +56,29 @@ export class DroneMapComponent implements OnInit, OnDestroy {
       if(update != null){
         if (update.drone_name === this.drone){
           if(this.CurrentOrder == null ){
-            this.addMark("CurrentOrder", update.coordinates, "Destination actuelle")
+            if(this._targetCoordinates != null && this._targetCoordinates.latitude == update.coordinates.latitude && this._targetCoordinates.longitude == update.coordinates.longitude){
+              this.removeMark("CurrentOrder")
+            } else {
+              this.addMark("CurrentOrder", update.coordinates, "Destination actuelle")
+            }
           } else {
             this.setMark("CurrentOrder", update.coordinates)
           }
 
           if(this.PreviousOrder == null ){
-            this.addMark("PreviousOrder", update.metadata.previous, "Destination précédente",0.5)
+            this.addMark("PreviousOrder", update.metadata.previous, "Destination précédente",1)
           } else {
             this.setMark("PreviousOrder", update.metadata.previous)
           }
 
           if(this.NextOrder == null ){
-            this.addMark("NextOrder", update.metadata.next, "Prochaine destination" ,0.5)
+            this.addMark("NextOrder", update.metadata.next, "Prochaine destination",0.5)
           } else {
-            this.setMark("NextOrder", update.metadata.next)
+            if(update.metadata.next.latitude=== update.coordinates.latitude && update.metadata.next.longitude === update.coordinates.longitude && update.metadata.next.altitude === update.coordinates.altitude){
+              this.removeMark("NextOrder")
+            } else {
+              this.setMark("NextOrder", update.metadata.next)
+            }
           }
         }
       }
@@ -79,28 +88,13 @@ export class DroneMapComponent implements OnInit, OnDestroy {
     this.onTarget = this.autoPilotService.targetUpdate$.subscribe(update => {
       if(update != null){
         if (update.name === this.drone){
+          this._targetCoordinates = update;
           if(this._autoPilotTarget == null ){
             this.addMarkFromLatLng("_autoPilotTarget", latLng(update.latitude, update.longitude), "Emplacement du déplacement voulu")
           } else {
             this.setMarkFromLatLng("_autoPilotTarget", latLng(update.latitude, update.longitude))
           }
-        } else {
-            let marker = new Marker(latLng(update.latitude, update.longitude), {
-            icon: icon({
-              iconSize: [20, 36],
-              iconAnchor: [10, 36],
-              iconUrl: 'assets/images/marker-icon.png',
-              iconRetinaUrl: 'assets/images/marker-icon-2x.png',
-              shadowUrl: 'assets/images/marker-shadow.png'
-            })
-          });
-      
-
-          if(this.myMap != null) {
-            marker.addTo(this.myMap)
-          }
-      
-        }
+        } 
       }
     })
     
@@ -130,11 +124,10 @@ export class DroneMapComponent implements OnInit, OnDestroy {
     this._lastCoordinates.longitude = 500;
     this.dronePosMarker = new Marker(latLng(this._lastCoordinates.latitude ,this._lastCoordinates.longitude ), {
       icon: icon({
-        iconSize: [ 25, 41 ],
-        iconAnchor: [ 13, 41 ],      
-        iconUrl: 'assets/images/marker-icon.png',
-        iconRetinaUrl: 'assets/images/marker-icon-2x.png',
-        shadowUrl: 'assets/images/marker-shadow.png'
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],      
+        iconUrl: 'assets/images/drone_marker.png',
+        iconRetinaUrl: 'assets/images/drone_marker.png'
       })
     });
     this.dronePosMarker.addTo(this.myMap)
@@ -181,14 +174,40 @@ export class DroneMapComponent implements OnInit, OnDestroy {
   }
 
   private addMarkFromLatLng(markName: string, coordinates: LatLng, description: string, opacity: number = 1){
+    let iconUrl = "assets/images/marker-icon.png"
+    let hwArray = [20,36]
+    let anchorArray = [10,36]
+    if(markName.includes("Current")){
+      iconUrl = "assets/images/next_position_marker.png"
+      hwArray = [40,40]
+      anchorArray = [20,20]
+    }
+
+    if(markName.includes("Next")){
+      iconUrl = "assets/images/next_position_marker.png"
+      hwArray = [30,30]
+      anchorArray = [15,15]
+    }
+
+    if(markName.includes("Previous")){
+      iconUrl = "assets/images/previous_position_marker.png"
+      hwArray = [20,20]
+      anchorArray = [10,10]
+    }
+
+    if(markName.includes("_autoPilotTarget")){
+      iconUrl = "assets/images/target_marker.png"
+      hwArray = [40,40]
+      anchorArray = [20,20]
+    }
+
     this[markName] = new Marker(coordinates, {
       opacity:opacity,
       icon: icon({
-        iconSize: [20, 36],
-        iconAnchor: [10, 36],
-        iconUrl: 'assets/images/marker-icon.png',
-        iconRetinaUrl: 'assets/images/marker-icon-2x.png',
-        shadowUrl: 'assets/images/marker-shadow.png'
+        iconSize: [hwArray[0],hwArray[1]],
+        iconAnchor: [anchorArray[0],anchorArray[1]],
+        iconUrl: iconUrl,
+        iconRetinaUrl: iconUrl
       })
     });
 
@@ -202,6 +221,13 @@ export class DroneMapComponent implements OnInit, OnDestroy {
 
   private setMark(markName: string, coordinates :DroneCoordinates){
     this.setMarkFromLatLng(markName,latLng(coordinates.latitude, coordinates.longitude))
+  }
+
+  private removeMark(markName: string){
+    if(this.myMap != null) {
+      (<Marker<any>>this[markName]).removeFrom(this.myMap)
+    }
+    this[markName] = null;
   }
 
 

@@ -19,6 +19,7 @@ import {MatInputModule} from "@angular/material/input"
 import {MatBadgeModule} from "@angular/material/badge"
 import {MatTabsModule} from "@angular/material/tabs"
 import {MatTableModule} from "@angular/material/table"
+import {MatSliderModule} from "@angular/material/slider"
 
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule} from '@angular/material/dialog'
@@ -73,6 +74,7 @@ import { DroneConsoleSettingsComponent } from './components/shared/drone-console
     MatTooltipModule,
     MatTableModule,
     MatTabsModule,
+    MatSliderModule,
     MatBadgeModule,
     FormsModule,
     MatFormFieldModule,

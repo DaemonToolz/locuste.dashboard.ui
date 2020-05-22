@@ -111,11 +111,11 @@ export class DroneConsoleComponent implements OnInit, OnDestroy {
 
 
   public showTutorial(){
-    this.dialog.open(ControlTutorialDialogComponent);
+    this.dialog.open(ControlTutorialDialogComponent,  {width:'75%', height:'75%'});
   }
 
   public showSettings(){
-    this.dialog.open(DroneConsoleSettingsComponent, {width:'75%'});
+    this.dialog.open(DroneConsoleSettingsComponent, {width:'75%', height:'75%'});
   }
 
   public changeFlightModel(forceAutomatic : boolean = false){

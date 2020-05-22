@@ -11,7 +11,7 @@
 
                     <a mat-button *ngIf="!isOnView(drone, ViewsEnum.DroneCameraView)" (click)="changeView(drone, ViewsEnum.DroneCameraView)">  
                         <mat-icon svgIcon="drone_icon"></mat-icon>
-                        Vue du drone
+                        Caméra
                     </a>
 
                     <a mat-button *ngIf="!isOnView(drone, ViewsEnum.DroneMapView)" (click)="changeView(drone, ViewsEnum.DroneMapView)">  
@@ -26,8 +26,16 @@
 
                     <a mat-button *ngIf="getAutopilotStatus(drone) != null" (click)="changeAutopilotStatus(drone)" >  
                         <mat-icon>airplanemode_active</mat-icon>
-                        Pilote automatique
+                        <span *ngIf="isAutopilotOperational(drone)">Automatique</span>
+                        <span *ngIf="isAutopilotOffline(drone) || isAutopilotInactive(drone)">Manuel</span>
+                        
                     </a>
+
+                    <a mat-button *ngIf="getAutopilotStatus(drone) != null">  
+                        <mat-icon>flight_takeoff</mat-icon> Décoller
+                        <!--<mat-icon>flight_land</mat-icon>    Atterrir-->
+                    </a>
+              
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content class="centerized">
