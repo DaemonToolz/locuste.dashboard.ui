@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DroneSettingsService } from 'src/app/services/drone/drone-settings.service';
+import { DroneSettings } from 'src/app/models/drone';
 
 @Component({
   selector: 'app-drone-console-settings',
@@ -7,16 +9,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./drone-console-settings.component.scss']
 })
 export class DroneConsoleSettingsComponent implements OnInit {
-
-  public verticalSpeed = 0.2
-  public horizontalSpeed = 0.2
-  public cameraSpeed = 0.2
-  
-  
-  public maxTilt = 15
-  public maxRotationSpeed = 0.01
-
-  constructor(public dialogRef: MatDialogRef<DroneConsoleSettingsComponent>) { }
+  constructor(public dialogRef: MatDialogRef<DroneConsoleSettingsComponent>, @Inject(MAT_DIALOG_DATA) public data: DroneSettings ) { 
+  }
 
   ngOnInit(): void {
   }

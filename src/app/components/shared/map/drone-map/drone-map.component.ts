@@ -184,7 +184,7 @@ export class DroneMapComponent implements OnInit, OnDestroy {
     }
 
     if(markName.includes("Next")){
-      iconUrl = "assets/images/next_position_marker.png"
+      iconUrl = "assets/images/plan_next_position_marker.png"
       hwArray = [30,30]
       anchorArray = [15,15]
     }

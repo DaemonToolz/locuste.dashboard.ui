@@ -6,12 +6,13 @@ import { ManualCommandRequest } from 'src/app/models/commands';
 import { take } from 'rxjs/operators';
 import { HealthMonitoringService } from 'src/app/services/Info/health-monitoring.service';
 import { DroneDataService } from 'src/app/services/drone/drone-data.service';
-import { BatteryStatus, GPSStatus, GPSStrength, WifiStatus, WifiStrength } from 'src/app/models/drone';
+import { BatteryStatus, GPSStatus, GPSStrength, WifiStatus, WifiStrength, DroneSettings } from 'src/app/models/drone';
 import { MatDialog } from '@angular/material/dialog';
 import { ControlTutorialDialogComponent } from '../tutorial/control-tutorial-dialog/control-tutorial-dialog.component';
 import { OperatorService } from 'src/app/services/users/operator.service';
 import { AutopilotDataService } from 'src/app/services/autopilot/autopilot-data.service';
 import { DroneConsoleSettingsComponent } from '../shared/drone-console-settings/drone-console-settings.component';
+import { DroneSettingsService } from 'src/app/services/drone/drone-settings.service';
 
 @Component({
   selector: 'app-drone-console',
@@ -93,7 +94,7 @@ export class DroneConsoleComponent implements OnInit, OnDestroy {
   public get width(){return this._width}
   public get height(){return this._height}
 
-  constructor(private route: ActivatedRoute, private operatorService: OperatorService, private droneData :DroneDataService, private connector: WebsocketService, private requester :ManualCommandRequestService, private droneStatusController: HealthMonitoringService, private dialog: MatDialog, private autoPilotService: AutopilotDataService) { 
+  constructor(private route: ActivatedRoute, private droneSettingsService: DroneSettingsService, private operatorService: OperatorService, private droneData :DroneDataService, private connector: WebsocketService, private requester :ManualCommandRequestService, private droneStatusController: HealthMonitoringService, private dialog: MatDialog, private autoPilotService: AutopilotDataService) { 
     this.selectedDrone = this.route.snapshot.paramMap.get('droneid');
     this._width = window.outerWidth/1.35;
     this._height = window.outerHeight/1.35;
@@ -115,7 +116,13 @@ export class DroneConsoleComponent implements OnInit, OnDestroy {
   }
 
   public showSettings(){
-    this.dialog.open(DroneConsoleSettingsComponent, {width:'75%', height:'75%'});
+    this.droneSettingsService.fetchSettings(this.selectedDrone)
+    const dref = this.dialog.open(DroneConsoleSettingsComponent, {width:'75%', data: this.droneSettingsService.droneSettings.get(this.selectedDrone)});
+    dref.afterClosed().pipe(take(1)).subscribe(result => {
+      if(result != null) {
+        this.droneSettingsService.updateSettings(result as DroneSettings);
+      }
+    });
   }
 
   public changeFlightModel(forceAutomatic : boolean = false){

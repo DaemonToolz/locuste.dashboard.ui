@@ -13,6 +13,16 @@ export class DroneInternalStatus {
     public battery: number;
 }
 
+export class DroneSettings {
+    public drone_name: string;
+    public vertical_speed: number;
+    public horizontal_speed: number;
+    public camera_speed: number;
+
+    public max_tilt: number;
+    public max_rotation_speed: number;
+}
+
 export class IdentificationRequest {
 	public name : string;
 	public video_port : number;
