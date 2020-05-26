@@ -7,4 +7,9 @@ export enum ManualCommandRequest{
     RequestSimulation = "request_simulation"
 }
 
+export enum AutomatedCommandRequest{
+    TakeOff = "takeoff",
+    GoHome = "home"
+}
+
  

@@ -9,7 +9,7 @@ import { SocketStatus } from '../models/status'
 import { BehaviorSubject } from 'rxjs';
 import { IdentificationRequest, DroneIdentifier, DroneStatus } from '../models/drone';
 import { DroneCoordinates, DroneFlightCoordinates, SimplifiedDroneFlightCoordinates } from '../models/coordinates';
-import { SchedulerSummarizedData } from '../models/autopilot';
+import { SchedulerSummarizedData, DroneSummarizedStatus } from '../models/autopilot';
 
 
 @Injectable({
@@ -45,6 +45,7 @@ export class WebsocketService {
   public positionUpdate$ : BehaviorSubject<DroneCoordinates> = new BehaviorSubject(null);
   public autopilotUpdate$ : BehaviorSubject<DroneFlightCoordinates> = new BehaviorSubject(null);
   public autopilotStatusUpdate$ : BehaviorSubject<SchedulerSummarizedData> = new BehaviorSubject(null);
+  public flyingStatusUpdate$ : BehaviorSubject<DroneSummarizedStatus> = new BehaviorSubject(null);
   
   public targetUpdate$ : BehaviorSubject<SimplifiedDroneFlightCoordinates> = new BehaviorSubject(null);
 
@@ -154,11 +155,15 @@ export class WebsocketService {
       })
 
       WebsocketService.Socket.on(MyListeners.OnScheduleUpdate, (update : DroneFlightCoordinates) => {
-        this.autopilotUpdate$.next(update as DroneFlightCoordinates)
+        this.autopilotUpdate$.next(update)
       })
 
       WebsocketService.Socket.on(MyListeners.OnAutopilotUpdate, (update : SchedulerSummarizedData) => {
-        this.autopilotStatusUpdate$.next(update as SchedulerSummarizedData)
+        this.autopilotStatusUpdate$.next(update)
+      })
+
+      WebsocketService.Socket.on(MyListeners.OnFlyingStatusUpdate, (update : DroneSummarizedStatus) => {
+        this.flyingStatusUpdate$.next(update)
       })
 
 

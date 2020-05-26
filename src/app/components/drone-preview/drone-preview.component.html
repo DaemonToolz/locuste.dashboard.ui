@@ -31,9 +31,9 @@
                         
                     </a>
 
-                    <a mat-button *ngIf="getAutopilotStatus(drone) != null">  
-                        <mat-icon>flight_takeoff</mat-icon> Décoller
-                        <!--<mat-icon>flight_land</mat-icon>    Atterrir-->
+                    <a mat-button (click)="takeoff_Land(drone);" *ngIf="getAutopilotStatus(drone) != null && getFlyingStatus(drone) != null ">  
+                        <mat-icon>{{ getFlyingStatus(drone).is_landed ? 'flight_takeoff' : 'flight_land' }}</mat-icon> 
+                        <span> {{ getFlyingStatus(drone).is_landed ? 'Décoller' : 'Atterrir' }} </span>
                     </a>
               
                 </mat-card-title>

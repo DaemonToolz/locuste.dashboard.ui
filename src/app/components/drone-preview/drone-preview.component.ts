@@ -11,6 +11,8 @@ import { AutopilotDataService } from 'src/app/services/autopilot/autopilot-data.
 import { Subscription } from 'rxjs';
 import { SchedulerSummarizedData } from 'src/app/models/autopilot';
 import { ViewsEnum } from 'src/app/models/navigation';
+import { ManualCommandRequestService } from 'src/app/services/drone/manual-command-request.service';
+import { AutomatedCommandRequest } from 'src/app/models/commands';
 
 @Component({
   selector: 'app-drone-preview',
@@ -88,7 +90,8 @@ export class DronePreviewComponent {
     return this._views.has(drone) ? this._views.get(drone) === view : false   
   }
 
-  constructor(private droneData :DroneDataService, private operatorService: OperatorService, private droneStatusController: HealthMonitoringService, private autoPilotService: AutopilotDataService) { 
+  constructor(private droneData :DroneDataService, private _commandRequest: ManualCommandRequestService,  private operatorService: OperatorService, 
+      private droneStatusController: HealthMonitoringService, private autoPilotService: AutopilotDataService) { 
     this._width = window.outerWidth/3;
     this._height = window.outerHeight/3;
     
@@ -97,6 +100,10 @@ export class DronePreviewComponent {
 
   public getAutopilotStatus(droneName: string){
     return this.autoPilotService.AutoPilot(droneName)
+  }
+
+  public getFlyingStatus(droneName: string){
+    return this.droneData.droneFlyingStatuses(droneName)
   }
 
   public isAutopilotOperational(droneName: string):boolean{
@@ -136,5 +143,16 @@ export class DronePreviewComponent {
     return this.droneData.wifiStrength(droneName)
   }
 
+  public takeoff_Land(droneName: string) {
+    let target = this.droneData.droneFlyingStatuses(droneName);
 
+    if(target != null && !target.is_going_home){
+
+      if(target.is_landed){
+        this._commandRequest.sendAutomatedCommand(droneName, AutomatedCommandRequest.TakeOff).pipe(take(1)).subscribe()
+      } else if(target.is_home_ready){
+        this._commandRequest.sendAutomatedCommand(droneName, AutomatedCommandRequest.GoHome).pipe(take(1)).subscribe()
+      }
+    }
+  }
 }

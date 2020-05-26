@@ -9,20 +9,20 @@ import { ExternalComponentsMonitoringService } from '../Info/external-components
 import { BatteryStatus, GPSStrength, WifiStrength, InternalStatuses } from 'src/app/models/drone';
 import { AutopilotDataService } from '../autopilot/autopilot-data.service';
 import { DroneCoordinates } from 'src/app/models/coordinates';
+import { DroneSummarizedStatus } from 'src/app/models/autopilot';
+import { FlyingStatusService } from './flying-status.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DroneDataService {
   private _availableDrones: string[] = [];
-  private _onDroneEvent: Subscription;
-  private _onDroneInternalEvent: Subscription;
-  private _onDronePositionUpdate: Subscription;
+  private _subscriptionPool: Subscription[] = [];
 
   private _droneStatuses: DroneNotification[] = [];
   private _droneInternalStatuses: Map<string, Map<InternalStatuses, any>> = new Map<string, Map<InternalStatuses, any>>();
-  private _droneCoordinates: Map<string, DroneCoordinates> = new Map<string,DroneCoordinates>();
-
+  private _droneCoordinates: Map<string, DroneCoordinates> = new Map<string, DroneCoordinates>();
+  private _droneFlyingStatus: Map<string, DroneSummarizedStatus> = new Map<string, DroneSummarizedStatus>();
 
   public get availableDrones(): string[] {
     return this._availableDrones
@@ -32,8 +32,16 @@ export class DroneDataService {
     return this._droneStatuses
   }
 
+
+  public droneFlyingStatuses(name: string): DroneSummarizedStatus {
+    if (!this._droneFlyingStatus.has(name)) {
+      return null
+    }
+    return this._droneFlyingStatus.get(name)
+  }
+
   public droneCoordinates(name: string): DroneCoordinates {
-    if(!this._droneCoordinates.has(name)){
+    if (!this._droneCoordinates.has(name)) {
       return null
     }
     return this._droneCoordinates.get(name)
@@ -44,24 +52,24 @@ export class DroneDataService {
     return this._droneInternalStatuses.get(name)
   }
 
-  public batteryStatus(name:string): BatteryStatus{
-    if(this.droneBattery(name) > 75) return BatteryStatus.high
-    if(this.droneBattery(name) > 50) return BatteryStatus.medium
-    if(this.droneBattery(name) > 25) return BatteryStatus.low
-    return BatteryStatus.critical;     
+  public batteryStatus(name: string): BatteryStatus {
+    if (this.droneBattery(name) > 75) return BatteryStatus.high
+    if (this.droneBattery(name) > 50) return BatteryStatus.medium
+    if (this.droneBattery(name) > 25) return BatteryStatus.low
+    return BatteryStatus.critical;
   }
 
 
-  public gpsStrength(name:string): GPSStrength{
-    if(this.droneGPS(name) > 18) return GPSStrength.high
-    if(this.droneGPS(name) > 10) return GPSStrength.medium
+  public gpsStrength(name: string): GPSStrength {
+    if (this.droneGPS(name) > 18) return GPSStrength.high
+    if (this.droneGPS(name) > 10) return GPSStrength.medium
     return GPSStrength.low
   }
 
 
-  public wifiStrength(name:string): WifiStrength{
-    if(this.droneWifi(name) <= -30 && this.droneWifi(name) > -45 ) return WifiStrength.high
-    if(this.droneWifi(name) <= -45 && this.droneWifi(name) > -80 ) return WifiStrength.medium
+  public wifiStrength(name: string): WifiStrength {
+    if (this.droneWifi(name) <= -30 && this.droneWifi(name) > -45) return WifiStrength.high
+    if (this.droneWifi(name) <= -45 && this.droneWifi(name) > -80) return WifiStrength.medium
     return WifiStrength.low
   }
 
@@ -87,7 +95,7 @@ export class DroneDataService {
   }
 
 
-  constructor(private droneDiscovery: DroneDiscoveryService, private connector: WebsocketService, droneMonitorService: HealthMonitoringService, private droneAutopilotService: AutopilotDataService) {
+  constructor(private _droneFlyingStatusesService: FlyingStatusService, private droneDiscovery: DroneDiscoveryService, private connector: WebsocketService, droneMonitorService: HealthMonitoringService, private droneAutopilotService: AutopilotDataService) {
     this.droneDiscovery.getDroneInfo().pipe(retry(20), take(1)).subscribe(data => {
       this._availableDrones = data;
       data.forEach(name => {
@@ -95,26 +103,31 @@ export class DroneDataService {
         this.droneAutopilotService.refreshAutopilot(name)
       })
 
-      this._onDronePositionUpdate = this.connector.positionUpdate$.subscribe((position: DroneCoordinates) => {
-        if(position != null){
+      this._subscriptionPool.push(this.connector.positionUpdate$.subscribe((position: DroneCoordinates) => {
+        if (position != null) {
           this._droneCoordinates.set(position.id, position);
         }
-      });
-  
+      }));
+
     })
 
-    this._onDroneInternalEvent = this.connector.internalStatusUpdate$.subscribe((notification: DroneInternalStatusNotification) => {
-      try {
+    this._subscriptionPool.push(this.connector.internalStatusUpdate$.subscribe((notification: DroneInternalStatusNotification) => {
+      if(notification != null){
         if (!this._droneInternalStatuses.has(notification.id)) {
           this._droneInternalStatuses.set(notification.id, new Map<InternalStatuses, any>())
         }
         this._droneInternalStatuses.get(notification.id).set(InternalStatuses[notification.status], notification.result);
-      } catch {
-
       }
-    })
+    }))
 
-    this._onDroneEvent = this.connector.droneEvents$.subscribe((notification: DroneNotification) => {
+
+    this._subscriptionPool.push(this.connector.flyingStatusUpdate$.subscribe((notification: DroneSummarizedStatus) => {
+      if(notification != null){
+        this._droneFlyingStatus.set(notification.drone_name, notification);
+      }
+    }))
+
+    this._subscriptionPool.push(this.connector.droneEvents$.subscribe((notification: DroneNotification) => {
 
       if (notification != null) {
         if (notification.name != null) {
@@ -138,6 +151,16 @@ export class DroneDataService {
             this._droneStatuses.push(droneNotification);
           })
         }
+      }
+    }))
+
+    this._droneFlyingStatusesService.fetchAllFlyingStatuses().pipe(take(1)).subscribe((result : Map<string,DroneSummarizedStatus>)  => {
+      result = new Map(Object.entries(result)) // Bug, l'objet envoyé n'est pas casté en map par défaut
+      if(result != null && result.size > 0){
+        result.forEach(value => {
+          this._droneFlyingStatus.set(value.drone_name,value);
+          
+        })
       }
     })
   }

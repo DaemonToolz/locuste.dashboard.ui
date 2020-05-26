@@ -214,7 +214,7 @@ export class DroneMapComponent implements OnInit, OnDestroy {
     (this[markName] as Marker<any>).bindTooltip(description)
 
     if(this.myMap != null) {
-      (<Marker<any>>this[markName]).addTo(this.myMap)
+      this[markName].addTo(this.myMap)
     }
 
   }
@@ -225,7 +225,7 @@ export class DroneMapComponent implements OnInit, OnDestroy {
 
   private removeMark(markName: string){
     if(this.myMap != null) {
-      (<Marker<any>>this[markName]).removeFrom(this.myMap)
+        this[markName].removeFrom(this.myMap)
     }
     this[markName] = null;
   }
@@ -233,7 +233,7 @@ export class DroneMapComponent implements OnInit, OnDestroy {
 
   private setMarkFromLatLng(markName: string, coordinates: LatLng){
     if(this[markName] != null){
-     (<Marker<any>>this[markName]).setLatLng(coordinates)
+      this[markName].setLatLng(coordinates)
     }
   }
 

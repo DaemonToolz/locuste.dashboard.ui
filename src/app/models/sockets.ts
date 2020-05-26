@@ -27,5 +27,6 @@ export enum SocketFunction{
     OnOperatorChange="operator_update",
     OnScheduleUpdate="add_on_schedule",
     OnTargetRecalculated="target_recalculated",
-    OnAutopilotUpdate="autopilot_update"
+    OnAutopilotUpdate="autopilot_update",
+    OnFlyingStatusUpdate="flying_status_update"
   }

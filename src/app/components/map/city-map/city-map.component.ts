@@ -103,14 +103,14 @@ export class CityMapComponent implements OnInit, OnDestroy {
     });
 
     if(this.myMap != null) {
-      (<Marker<any>>this[markName]).addTo(this.myMap)
+      this[markName].addTo(this.myMap)
     }
 
   }
 
   private setMark(markName: string, coordinates :DroneCoordinates){
       if(this[markName] != null){
-       (<Marker<any>>this[markName]).setLatLng(latLng(coordinates.latitude, coordinates.longitude))
+       this[markName].setLatLng(latLng(coordinates.latitude, coordinates.longitude))
       }
   }
 }
