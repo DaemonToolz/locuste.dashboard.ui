@@ -143,7 +143,7 @@ export class DronePreviewComponent {
     return this.droneData.wifiStrength(droneName)
   }
 
-  public takeoff_Land(droneName: string) {
+  public takeoffLand(droneName: string) {
     let target = this.droneData.droneFlyingStatuses(droneName);
 
     if(target != null && !target.is_going_home){

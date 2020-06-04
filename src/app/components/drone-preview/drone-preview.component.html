@@ -31,7 +31,7 @@
                         
                     </a>
 
-                    <a mat-button (click)="takeoff_Land(drone);" *ngIf="getAutopilotStatus(drone) != null && getFlyingStatus(drone) != null ">  
+                    <a mat-button (click)="takeoffLand(drone);" *ngIf="getAutopilotStatus(drone) != null && getFlyingStatus(drone) != null ">  
                         <mat-icon>{{ getFlyingStatus(drone).is_landed ? 'flight_takeoff' : 'flight_land' }}</mat-icon> 
                         <span> {{ getFlyingStatus(drone).is_landed ? 'Décoller' : 'Atterrir' }} </span>
                     </a>
@@ -47,7 +47,7 @@
 
                 <a mat-button [ngClass]="{'high':!isManual(drone), 'medium':isManual(drone)}"> 
                     <mat-icon> {{isManual(drone)?'person':'android'}} </mat-icon>
-                    <span *ngIf="getDroneLeader(drone) != null" [innerHTML]="getDroneLeader(drone)"></span>
+                    <span *ngIf="isManual(drone) && getDroneLeader(drone) != null" [innerHTML]="getDroneLeader(drone)"></span>
                 </a>
 
                 <a mat-button [ngClass]="GPSStrength[getGPSStrength(drone)]"> 
