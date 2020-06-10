@@ -1,6 +1,8 @@
 # locuste.dashboard.ui
 LOCUSTE : Interface graphique ANGULAR 
 
+<img width="2629" alt="locuste-web-banner" src="https://user-images.githubusercontent.com/6602774/84285956-5b853500-ab3e-11ea-807d-862e7e9ee1b7.png">
+
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/4ee69cbcd86c459ba377c2c4c6d916ee)](https://www.codacy.com/manual/axel.maciejewski/locuste.dashboard.ui?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DaemonToolz/locuste.dashboard.ui&amp;utm_campaign=Badge_Grade)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DaemonToolz_locuste.dashboard.ui&metric=alert_status)](https://sonarcloud.io/dashboard?id=DaemonToolz_locuste.dashboard.ui)
@@ -10,8 +12,6 @@ LOCUSTE : Interface graphique ANGULAR
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=DaemonToolz_locuste.dashboard.ui&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=DaemonToolz_locuste.dashboard.ui)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DaemonToolz_locuste.dashboard.ui&metric=bugs)](https://sonarcloud.io/dashboard?id=DaemonToolz_locuste.dashboard.ui)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DaemonToolz_locuste.dashboard.ui&metric=coverage)](https://sonarcloud.io/dashboard?id=DaemonToolz_locuste.dashboard.ui)
-
-<img width="2629" alt="locuste-web-banner" src="https://user-images.githubusercontent.com/6602774/84284573-ab62fc80-ab3c-11ea-8260-0866505bcea3.png">
 
 Le project Locuste se divise en 4 grandes sections : 
 * Automate (Drone Automata) PYTHON (https://github.com/DaemonToolz/locuste.drone.automata)
