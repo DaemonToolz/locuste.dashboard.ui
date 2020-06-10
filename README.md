@@ -11,6 +11,7 @@ LOCUSTE : Interface graphique ANGULAR
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DaemonToolz_locuste.dashboard.ui&metric=bugs)](https://sonarcloud.io/dashboard?id=DaemonToolz_locuste.dashboard.ui)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DaemonToolz_locuste.dashboard.ui&metric=coverage)](https://sonarcloud.io/dashboard?id=DaemonToolz_locuste.dashboard.ui)
 
+<img width="2629" alt="locuste-web-banner" src="https://user-images.githubusercontent.com/6602774/84284573-ab62fc80-ab3c-11ea-8260-0866505bcea3.png">
 
 Le project Locuste se divise en 4 grandes sections : 
 * Automate (Drone Automata) PYTHON (https://github.com/DaemonToolz/locuste.drone.automata)
