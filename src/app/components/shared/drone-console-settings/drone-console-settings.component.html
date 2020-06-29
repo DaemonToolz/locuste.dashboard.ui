@@ -1,38 +1,26 @@
 <h2 mat-dialog-title>Paramètres de contrôle</h2>
 <mat-dialog-content>
-    <mat-tab-group>
-        <mat-tab label="Contrôles basiques">
-            <h3>Vitesse verticale : <span [innerHTML]="data.vertical_speed"></span>m/s</h3>
-            <mat-slider [max]="2" [min]="0.2" [step]="0.1" [thumbLabel]="true" [tickInterval]="0.1"
-                [(ngModel)]="data.vertical_speed">
-            </mat-slider>
+    <h3>Vitesse verticale : <span [innerHTML]="data.vertical_speed"></span>m/s</h3>
+    <mat-slider [max]="2" [min]="0.2" [step]="0.1" [thumbLabel]="true" [tickInterval]="0.1"
+        [(ngModel)]="data.vertical_speed">
+    </mat-slider>
 
-            <h3>Vitesse horizontale : <span [innerHTML]="data.horizontal_speed"></span>m/s</h3>
-            <mat-slider [max]="2" [min]="0.05" [step]="0.01" [thumbLabel]="true" [tickInterval]="0.01"
-                [(ngModel)]="data.horizontal_speed">
-            </mat-slider>
+    <h3>Vitesse horizontale : <span [innerHTML]="data.horizontal_speed"></span>m/s</h3>
+    <mat-slider [max]="2" [min]="0.05" [step]="0.01" [thumbLabel]="true" [tickInterval]="0.01"
+        [(ngModel)]="data.horizontal_speed">
+    </mat-slider>
 
-            <h3>Vitesse de la caméra : <span [innerHTML]="data.camera_speed"></span>°/s</h3>
-            <mat-slider [max]="1" [min]="0.01" [step]="0.01" [thumbLabel]="true" [tickInterval]="0.01"
-                [(ngModel)]="data.camera_speed">
-            </mat-slider>
-        </mat-tab>
-        <mat-tab label="Contrôles avancés">
-            <h3>Inclinaison maximale : <span [innerHTML]="data.max_tilt"></span>%</h3>
-            <mat-slider [max]="100" [min]="0" [step]="1" [thumbLabel]="true" [tickInterval]="1"
-                [(ngModel)]="data.max_tilt">
-            </mat-slider>
+    <h3>Vitesse de la caméra : <span [innerHTML]="data.camera_speed"></span>°/s</h3>
+    <mat-slider [max]="1" [min]="0.01" [step]="0.01" [thumbLabel]="true" [tickInterval]="0.01"
+        [(ngModel)]="data.camera_speed">
+    </mat-slider>
 
-            <h3>Vitesse maximale de rotation: <span [innerHTML]="data.max_rotation_speed"></span>°/s</h3>
-            <mat-slider [max]="10" [min]="0.01" [step]="0.01" [thumbLabel]="true" [tickInterval]="0.01"
-                [(ngModel)]="data.max_rotation_speed">
-            </mat-slider>
-        </mat-tab>
-    </mat-tab-group>
-
-
+    <h3>Vitesse maximale de rotation: <span [innerHTML]="data.max_rotation_speed"></span>°/s</h3>
+    <mat-slider [max]="10" [min]="0.01" [step]="0.01" [thumbLabel]="true" [tickInterval]="0.01"
+        [(ngModel)]="data.max_rotation_speed">
+    </mat-slider>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Annuler</button>
     <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Confirmer</button>
-  </mat-dialog-actions>
+</mat-dialog-actions>
