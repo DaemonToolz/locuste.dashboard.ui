@@ -1,12 +1,14 @@
 .centerized {
     text-align: center;
     align-content: center;
+    justify-content: center;
 }
 
 .full-scale{
     height:100%;
     width:100%;
 }
+
 
 .connecting {
     background-color: blue;
@@ -58,7 +60,39 @@
     color: lighten(orange,10);
 }
 
-.operator-content {
-    height: 92%;;
+.operator-content{
+    max-height:65vh;
     overflow: auto;
 }
+
+.large-icon {
+    width:20vh;
+    height:100%;
+}
+.info-icon {
+    width:15vh;
+    height:100%;
+}
+
+.medium-icon {
+    width:10vh;
+    height:50%;
+}
+
+.small-icon {
+    width:5vh;
+    height:25%;
+}
+
+
+mat-icon.mat-card-avatar {
+    width: auto;
+    height: auto;
+    font-size: 6em;
+  }
+
+  mat-icon.mat-list-avatar {
+    width: auto !important;
+    height: auto !important;
+    font-size: 4em;
+  }

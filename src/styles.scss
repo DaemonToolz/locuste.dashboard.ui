@@ -30,3 +30,9 @@ html, body {
   .critical{
     background-color: darkred ;
   }
+
+  mat-icon {
+    svg {
+      pointer-events: none;
+     }
+  }

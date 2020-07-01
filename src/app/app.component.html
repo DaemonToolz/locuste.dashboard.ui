@@ -1,29 +1,26 @@
 
 <mat-toolbar color="primary">
-  <a mat-button class="main-icon" routerLink="/">
-      <span>Locuste</span>
+  <a mat-button routerLink="/">
+    <mat-icon class="large-icon" svgIcon="locuste_icon"></mat-icon>
   </a>
 
  
   <a mat-button routerLink="/" >
-    <mat-icon svgIcon="drone_icon"></mat-icon>
-    Vue générale
+    <mat-icon class="medium-icon" svgIcon="drone_icon"></mat-icon>
   </a>
 
 
-  <a mat-button routerLink="/monitor" [ngClass]="{'error':!isRelayReachable, 'success':isRelayReachable}">
-    <mat-icon>device_hub</mat-icon> 
-    Unité de contrôle
+  <a mat-button routerLink="/monitor">
+    <mat-icon class="medium-icon"  [svgIcon]="HubStatus[isRelayReachable ? 'connected': 'disconnected']"></mat-icon>
   </a>
 
-  <a mat-button routerLink="/monitor" [ngClass]="NotificationType[myStatus.type]">
-    <span [innerHTML]="myStatus.message"></span> 
+  <a mat-button routerLink="/monitor" >
+    <mat-icon class="large-icon" [svgIcon]="PcToHubStatus[SocketStatus[socketConnection]]"></mat-icon>
   </a>
  
   
-  <a mat-button routerLink="/map" [ngClass]="{'error': !isMapModuleOperational, 'success': isMapModuleOperational}">
-    <mat-icon>location_on</mat-icon>
-    Carte du secteur
+  <a mat-button routerLink="/map">
+    <mat-icon class="medium-icon" svgIcon="{{isMapModuleOperational ? 'map_ready' : 'map_not_ready'}}"></mat-icon>
   </a>
 
 

@@ -5,9 +5,9 @@
 export const environment = {
   production: false,
   services: {
-    drone_info : 'http://192.168.1.66:20000',
-    brain_connector: 'ws://192.168.1.66:21000',
-    video_server: 'ws://192.168.1.66:'
+    drone_info : `http://${window.location.hostname}:20000`,
+    brain_connector: `ws://${window.location.hostname}:21000`,
+    video_server: `ws://${window.location.hostname}:`
   }
 };
 
@@ -18,4 +18,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import `zone.js/dist/zone-error`;  // Included with Angular CLI.

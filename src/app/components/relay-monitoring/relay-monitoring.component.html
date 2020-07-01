@@ -2,59 +2,48 @@
 
     <mat-grid-tile colspan="2">
         <mat-card class="full-scale">
-            <mat-card-header>
-                <mat-card-title class="centerized">
-                    <h1> <strong>Section Opérateurs</strong> </h1>
+            <mat-card-header class="centerized">
+                <mat-card-title >
+                    <mat-icon class="medium-icon" svgIcon="success_pc"></mat-icon>
                 </mat-card-title>
             </mat-card-header>
-            <mat-card-content class="operator-content">
-                <div class="relay-div" *ngFor="let operator of operatorService.operators">
-                    <p>
-                        <span> Nom : </span>
-                        <strong [innerHTML]="operator.name"></strong>
-                        <span *ngIf="(operatorService.myself != null && operatorService.myself.channel_id === operator.channel_id)"> (Vous) </span>
-                    </p>
-                    <p> 
-                        <span> Identifiant unique : </span>
-                        <span [innerHTML]="operator.channel_id"></span> 
-                    </p>
-                    <p> 
-                        <span> Drone contrôlé : </span>
-                        <span [innerHTML]="operator.controlled_drone"> </span>
-                    </p>
-
-                    <p> 
-                        <span>Anonyme : </span>
-                        <span [innerHTML]="operator.is_anonymous ? 'Oui':'Non'"> </span>
-                    </p>
-                    <br/>
-                </div>
-                
+            <mat-card-content>
+         
+                <mat-action-list class="operator-content">
+                    <mat-list-item  *ngFor="let operator of operatorService.operators">
+                        <mat-icon matListAvatar *ngIf="operator.is_anonymous"> live_help </mat-icon>
+                        <mat-icon matListAvatar *ngIf="!operator.is_anonymous"> verified_user </mat-icon>
+                      <h3 matLine [innerHTML]="operator.name"> </h3>
+                      <p matLine>
+                        <strong [innerHTML]="operator.channel_id"></strong>
+                        <span
+                            *ngIf="(operatorService.myself != null && operatorService.myself.channel_id === operator.channel_id)">
+                            (Vous) </span>
+                      </p>
+                           <p matLine>
+                            <span> Drone contrôlé : </span>
+                            <span [innerHTML]="operator.controlled_drone"> </span>
+                      </p>
+                    </mat-list-item>
+                </mat-action-list>
             </mat-card-content>
         </mat-card>
     </mat-grid-tile>
 
 
     <mat-grid-tile colspan="1">
-
-        <mat-card [ngClass]="SocketStatus[socketConnection]">
-            <mat-card-header>
-                <mat-card-title>
-                    <h3> <strong> Connexion relai </strong> </h3>
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content class="centerized" *ngIf="socketConnection == SocketStatus.connecting">
-                <mat-progress-spinner class="centered-spinner" mode="indeterminate">
-                </mat-progress-spinner>
+        <mat-card >
+            <mat-card-content class="centerized" >
+                <mat-icon class="large-icon" [svgIcon]="PcToHubStatus[SocketStatus[socketConnection]]"></mat-icon>
             </mat-card-content>
         </mat-card>
     </mat-grid-tile>
 
     <mat-grid-tile colspan="2">
         <mat-card class="full-scale">
-            <mat-card-header [ngClass]="{'connected': (health.isRelayReachable == true), 'disconnected': (health.isRelayReachable == false)}">
+            <mat-card-header class="centerized">
                 <mat-card-title>
-                    <h1> <strong>Relai et unité de contrôle </strong> </h1>
+                    <mat-icon class="medium-icon"  [svgIcon]="HubStatus[health.isRelayReachable ? 'connected': 'disconnected']"></mat-icon>
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content  class="operator-content">
@@ -80,10 +69,6 @@
                                 {{moduleStatus(drone.name).get(system).get(subsystem) ? 'check_circle' : 'remove_circle'}}
                             </mat-icon>
                             <span [innerHTML]="SubSystem[subsystem]"></span>
-
-                            <span *ngIf="!moduleStatus(drone.name).get(system).get(subsystem)" >
-                                - Cliquer pour redémarrer le module
-                            </span>
                         </a>
                     </div>
                 </span>
@@ -94,36 +79,39 @@
     </mat-grid-tile>
 
     <mat-grid-tile colspan="1">
-
         <mat-card>
-            <mat-card-header>
-                <mat-card-title class="centerized">
-                    <h3> <strong> Connexion automates </strong> </h3>
-                </mat-card-title>
-            </mat-card-header>
             <mat-card-content>
-                <div class="relay-div" *ngFor="let drone of dronedata.droneStatuses"
-                    [matTooltip]="drone.message"
-                    [matTooltipClass]="DroneConnectionStatus[drone.droneStatus]"
-                    aria-label=""
-                    [ngClass]="DroneConnectionStatus[drone.droneStatus]">
-                    <span><strong [innerHTML]="drone.name"></strong></span>
-                </div>
+                <mat-list>
+                    <mat-list-item *ngFor="let drone of dronedata.droneStatuses">
+                        <h3 matLine [innerHTML]="drone.name"> </h3>
+                        <mat-icon matLine class="large-icon"
+                        [svgIcon]="HubToAutomatonStatus[DroneConnectionStatus[drone.droneStatus]]"></mat-icon>
+                    </mat-list-item>
+                </mat-list>
             </mat-card-content>
         </mat-card>
     </mat-grid-tile>
 
     <mat-grid-tile colspan="2">
         <mat-card class="full-scale">
-            <mat-card-header>
-                <mat-card-title class="centerized">
-                    <h1> <strong>Automates et Drones</strong> </h1>
+            <mat-card-header class="centerized">
+                <mat-card-title >
+                    <mat-icon class="medium-icon" svgIcon="locuste_pydrone"></mat-icon>
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content class="operator-content">
-                <div class="relay-div" 
-                    *ngFor="let drone of automatonMonitoring.availableAutomatons">
-                    <strong [ngClass]="{'error': (automatonStatus(drone).available == false)}" [innerHTML]="drone"></strong>
+     
+                <div class="relay-div" *ngFor="let drone of automatonMonitoring.availableAutomatons">
+                    <div class="centerized">
+                        <strong [innerHTML]="drone"></strong>
+                    </div>
+                    <div class="centerized">
+                       
+                        <mat-icon class="medium-icon"
+                            [svgIcon]="AutomatonStatus[automatonStatus(drone).available && automatonStatus(drone).connected && automatonStatus(drone).ongoing ? 'connected': 'disconnected']">
+                        </mat-icon>
+                    </div>
+
                     <div class="icon-text" *ngFor="let key of availableFields(automatonStatus(drone))" [ngClass]="displayStatus(StatusToReadable[key], automatonStatus(drone)[key])">
                         <mat-icon>
                             {{automatonStatus(drone)[key] ? 'check_circle' : 'remove_circle'}}

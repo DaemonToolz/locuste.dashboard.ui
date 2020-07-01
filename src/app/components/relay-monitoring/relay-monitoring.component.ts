@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsocketService } from 'src/app/services/websocket.service';
-import { SocketStatus } from 'src/app/models/status';
+import { SocketStatus, PcToHubStatus, HubToAutomatonStatus, HubStatus, AutomatonStatus } from 'src/app/models/status';
 import { DroneDataService } from 'src/app/services/drone/drone-data.service';
 import { PingService } from 'src/app/services/ping/ping.service';
 
@@ -22,6 +22,12 @@ export class RelayMonitoringComponent implements OnInit {
   public DroneConnectionStatus = DroneConnectionStatus;
   public StatusToReadable = StatusToReadable;
   
+  public PcToHubStatus = PcToHubStatus;
+  public HubToAutomatonStatus = HubToAutomatonStatus;
+  public HubStatus = HubStatus;
+  public AutomatonStatus = AutomatonStatus;
+
+
   public System = System;
   public SubSystem = SubSystem;
 
