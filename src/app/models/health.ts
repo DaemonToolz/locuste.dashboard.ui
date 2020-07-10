@@ -10,7 +10,7 @@ export enum SubSystem{
     HttpServer = "Serveur HTTP",
     Runner = "Processus d'exécution",
     SchedulerConnection = "Connexion au planfiicateur",
-    RPCServer = "Serveur de communication Inter-pocessus",
+    RPCServer = "Serveur de communication Inter-processus",
   
     // Section composants dédiés
     VideoServer = "Serveur vidéo",

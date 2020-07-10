@@ -48,22 +48,22 @@ mat-toolbar{
 }
 
 .large-icon {
-  width:10vw;
-  height:8vh;
+  width:calc(8vh + 8vw);
+  height:calc(2vh + 2vw);
 }
 .info-icon {
-  width:10vw;
-  height:10vh;
+  width:calc(10vh + 10vw);
+  height:calc(2vw + 2vw);
 }
 
 .medium-icon {
-  width:7.5vw;
-  height:7.5vh;
+  width:calc(2vh + 2vw);
+  height:calc(2vh + 2vw);
 }
 
 .small-icon {
-  width:5vw;
-  height:5vh;
+  width:calc(6vh + 6vw);
+  height:calc(2vw + 2vw);
 }
 
 
